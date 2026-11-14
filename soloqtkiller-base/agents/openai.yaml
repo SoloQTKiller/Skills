@@ -1,0 +1,4 @@
+interface:
+  display_name: "SoloQTKiller Base"
+  short_description: "Cria bots Discord.js na base"
+  default_prompt: "Use $soloqtkiller-base para criar ou evoluir um bot Discord.js seguindo a base SoloQTKiller."
