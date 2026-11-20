@@ -111,3 +111,22 @@ The user-facing behavior should be calm: "Seu ticket já está sendo criado", "A
 - Discord components reference: `https://docs.discord.com/developers/components/reference`
 - Discord emoji resource: `https://docs.discord.com/developers/resources/emoji`
 - Discord rate limits: `https://docs.discord.com/developers/topics/rate-limits`
+
+## Components 14.28.1
+
+Contrato verificado em 14/11/2026: [referência oficial](https://docs.discord.com/developers/components/reference). APIs dos builders/getters confirmadas no pacote oficial 14.28.1 instalado. Consulte [components-14.28.1.md](components-14.28.1.md) para métodos e exemplos executáveis.
+
+| Componente | Limitações a validar antes de enviar |
+| --- | --- |
+| File (13) | Somente mensagem V2 (`IsComponentsV2 = 32768`), raiz ou Container; um anexo por componente; somente `attachment://nome` com arquivo realmente anexado/retido. `name`/`size` são campos de resposta. |
+| File Upload (19) | Somente Label em modal; até 10 arquivos; mínimo 0–10; use máximo 1–10; mínimo não pode exceder máximo. `required` padrão true; mínimo 0 exige required false. Tamanho por arquivo depende do limite de upload do usuário no canal. |
+| Filtro de upload | Até 10 entradas; categorias image/video/audio ou extensão com ponto; sem garantia de MIME/conteúdo. Quando usar extensões de imagens/vídeos em mobile, inclua .jpg e .mp4/.mov conforme o caso. Não confundir limite do Discord com o limite interno de 2 MiB usado no exemplo. |
+| Radio Group (21) | Somente Label/modal; 2–10 opções, escolha única, required padrão true. No máximo uma opção default; opcional sem seleção retorna null. |
+| Checkbox Group (22) | Somente Label/modal; 1–10 opções; mínimo 0–10 (padrão 1); máximo 1–10 (padrão número de opções), sempre compatível com o total de opções. Mínimo 0 exige required false. Opcional vazio retorna []. |
+| Checkbox (23) | Somente Label/modal; valor booleano e default booleano; sem required. Exigência de aceite deve ser validada no serviço ou representada por CheckboxGroup obrigatório de uma opção. |
+
+Nos componentes de entrada, custom_id tem 1–100 caracteres. Opções de Radio/CheckboxGroup usam label/value de até 100 caracteres, description opcional de até 100 e valores únicos dentro do grupo. Label: label de até 45, description de até 100; modal: título de até 45 e 1–5 componentes raiz. O exemplo integrado usa quatro Labels, não coloca File no modal. Não adicionar disabled em inputs de modal.
+
+Mensagens V2 permitem até 40 componentes no total, contando componentes aninhados, e até 4000 caracteres somados em Text Displays. Os anexos de uma mensagem continuam limitados a 10; respeite também o limite de bytes da interação/canal e do projeto. Não misture content/embeds com IsComponentsV2. A flag V2 não pode ser removida depois que a mensagem foi convertida. Ao substituir arquivos em edit, declare attachments retidos ou [] para remover anteriores, e envie o novo arquivo antes de referenciá-lo no payload. Logs com anexos continuam seguindo a exceção legada da base.
+
+Compatibilidade: `setFileTypes`/`addFileTypes`/`clearFileTypes` requerem builder que suporte file_types (discord.js >=14.28.0 no conjunto documentado); 14.28.1 inclui esse suporte. Não inferir suporte apenas pela major 14 ou por `^14.x` no package.json: conferir exports, getters e lockfile. Não usar APIs de main em exemplos fixados em 14.28.1.

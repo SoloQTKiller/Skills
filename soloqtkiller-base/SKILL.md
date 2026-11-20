@@ -119,6 +119,8 @@ The complete reference structure may also include `src/services/` for business w
 
 ## Components V2 and Central Control
 
+- For File, File Upload, Radio Group, Checkbox Group, or Checkbox, read [references/components-14.28.1.md](references/components-14.28.1.md) for versioned builder/getter contracts and complete SoloQTKiller examples, including individual flows and MongoDB integration. File is message-only; the four inputs belong to Labels in modals and are read through `interaction.fields`. `FileUploadBuilder.setFileTypes()` requires discord.js 14.28.0+; validate uploaded bytes independently of the extension filter. A V2 File panel does not relax the mandatory legacy format for attachment-bearing logs.
+
 - Use Discord Components V2 for every new panel, administration screen, ticket panel, configuration screen, and other rich interactive interface whenever the target project supports it. Build these screens through the project's shared Components V2 helpers and include the required `MessageFlags.IsComponentsV2` flag.
 - Do not mix legacy panel construction and Components V2 arbitrarily. If an existing flow is being changed, preserve compatibility with its current renderer or migrate the complete renderer through the project's established Components V2 abstraction.
 - Prefer shared builders such as `createContainer`, `payload`, and `emoji` from `src/utils/componentsV2.js` when they exist. Keep layout, colors, separators, text blocks, action rows, and emoji treatment consistent through those helpers rather than rebuilding the visual system in each feature.
@@ -288,6 +290,8 @@ Map the request onto these layers:
 - When a feature opens tickets or threads, keep validation, persistence, panel sending, and closing/logging separated into their own handlers or helpers.
 
 ## References
+
+- Read [references/components-14.28.1.md](references/components-14.28.1.md) for File/Upload/Radio/Checkbox builders, compatibility, input processing, and complete V2/MongoDB examples.
 
 - Read [references/architecture.md](references/architecture.md) for the extracted structure and execution flow.
 - Read [references/examples.md](references/examples.md) for concrete examples of `index.js`, events, commands, slash commands, interactions, messages, mongoose models, utility helpers, and the application-emoji registration system used by the base.

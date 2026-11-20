@@ -218,3 +218,16 @@ Any log that carries a file is a mandatory legacy-message path, even when the re
 - When the file is a safety boundary, fetch the sent message and confirm the expected attachment before closing, deleting, or marking the source workflow complete.
 - Add a focused test asserting `files` and `embeds` are present while `components` and the `IsComponentsV2` flag are absent.
 - Ordinary interactive panels that display an attachment-backed image are not automatically logs; this exception is specifically mandatory for log/delivery messages whose purpose includes delivering the file.
+
+## File, uploads e escolhas em modais (14.28.1)
+
+Exemplos completos de cada fluxo e do conjunto integrado: [components-14.28.1.md](components-14.28.1.md). Use `createContainer`, `payload`, `emoji` e os loaders existentes. FileBuilder é exibição de bytes anexados pelo bot, não upload de usuário; FileUploadBuilder recebe anexos resolvidos via `interaction.fields.getUploadedFiles`. Radio e Checkbox chegam pelo ModalSubmit, com getters próprios, sem handlers/listeners adicionais.
+
+- Antes de showModal, validar origem, guild, propriedade/permissão e versão. showModal precisa ser a primeira resposta; não deferir o Button. No ModalSubmit, revalidar permissão e usar deferUpdate para a origem em mensagem antes de download/MongoDB. Para modal sem origem, deferReply ephemeral e usar panelOrigin em vez de presumir que existe mensagem.
+- Checkbox false, CheckboxGroup [] e Radio opcional null têm semânticas diferentes. Preservar false/[] ao salvar; validar allowlists e cardinalidade novamente no serviço. Aceite obrigatório não é propriedade de CheckboxBuilder.
+- Prefill com setDefault nas opções/grupos/Checkbox; não tentar preencher FileUpload com uma URL antiga. Mostrar o estado anterior no painel e explicar a substituição.
+- File types filtra extensões no cliente; não é fronteira de validação. Validar quantidade, tamanho, MIME, origem CDN, bytes limitados e assinatura; não executar arquivos. Usar timeout, limitar redirects/hosts, evitar logs de URLs assinadas e não fazer download sem limite. Aplicar parser seguro/antivírus quando o domínio exigir.
+- Para persistência, salvar todos os campos juntos após validação, com índice único e atualização condicional por revisão/ID do registro. Não sobrescrever silenciosamente uma submissão mais nova nem recriar o registro expirado no submit. Não armazenar URLs assinadas como prova durável. Definir armazenamento privado/retencão antes de prometer retenção dos bytes.
+- Após gravar, invalidar/recarregar somente o cache usado e reconstruir o renderer de origem. Modal de mensagem permite editReply inclusive para origem ephemeral. Se o edit falhar após persistência, avisar que os dados foram salvos e permitir reabrir; não mandar a submissão repetir o efeito como se a gravação tivesse falhado.
+- Cancelar/fechar modal não gera submit nem evento de cancelamento. Deixar o painel válido e expirar contextos temporários de origem; não implementar collector ou promessa de evento inexistente.
+- File em painel V2 não altera a regra de logs: transcript, backup, recibo, evidência e outros logs com anexos devem sair diretamente como payload legado, sem flags/components/decoradores V2. Não transformar automaticamente todo payload com files em V2.

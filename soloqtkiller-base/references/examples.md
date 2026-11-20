@@ -1949,3 +1949,11 @@ Then add only the feature folders that the request needs:
 - `src/emojis/...` and `src/config/application-emojis.json` when the bot uses custom application emojis
 - `src/mongoose/schemas/...`
 - `test/...` for focused tests of utilities and critical business rules
+
+## Exemplos completos de Components 14.28.1
+
+Leia [components-14.28.1.md](components-14.28.1.md) para os exemplos CommonJS prontos para reutilizar de **File**, **File Upload**, **Radio Group**, **Checkbox Group** e **Checkbox**, incluindo cada fluxo isolado e o integrado com MongoDB e atualização do painel de origem.
+
+O conjunto contém todos os arquivos: `src/messages/components/panel.js`, `src/interactions/Button/components/open.js`, `src/interactions/ModalSubmit/components/submit.js`, `src/services/componentProfile.js`, `src/mongoose/schemas/ComponentProfile.js`, `src/utils/componentProfileModal.js`, `src/utils/componentProfileError.js` e `src/SlashCommands/general/componentes.js`. Reutiliza createContainer/payload/emoji, client.messages, client.database e o roteamento por categoria/ação com sufixo. Não instala arquitetura, loader ou listener independente.
+
+Cada botão individual abre só o seu campo; Editar tudo abre os quatro campos de entrada. File exibe um resumo JSON como anexo de painel V2 em todos os modos. Os getters interaction.fields, validação de PDF com download limitado, erros localizados, índice único, concorrência por revisão/ID, TTL de dados pessoais e confirmação de persistência separada de falha visual estão implementados integralmente. Consulte a seção de compatibilidade antes de usar FileUploadBuilder.setFileTypes em versões anteriores à 14.28.0.

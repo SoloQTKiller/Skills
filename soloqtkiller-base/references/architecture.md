@@ -307,3 +307,13 @@ Store cross-cutting helpers:
 - Create `mongoose/schemas/` when feature state needs persistence.
 - Create `interactions/` whenever buttons, modals, or selects are part of the UX.
 - Create modal-driven configuration flows when selecting users, cargos, canais, mentionables, or predefined options inside a focused form is clearer than stacking multiple message components.
+
+## Components 14.28.1: fluxo de arquivos e formulários
+
+Leia [components-14.28.1.md](components-14.28.1.md) para o conjunto completo reutilizável. Preserve o fluxo `SlashCommands → messages → Button → modal → ModalSubmit → services → client.database → messages`. File (13) é apresentação de anexo em mensagem V2; FileUpload (19), RadioGroup (21), CheckboxGroup (22) e Checkbox (23) são entradas de modal dentro de Label. Não criar pastas de interação RadioGroup/Checkbox: a entrada é sempre `ModalSubmit`.
+
+O renderer `src/messages/components/panel.js` utiliza `createContainer` e `emoji`; modal builders ficam em `src/utils/componentProfileModal.js`; validação, leitura dos campos, download limitado, digest e persistência ficam em `src/services/componentProfile.js`; o schema é carregado pelo `src/mongoose/index.js` existente. Os handlers exportam `(client, interaction)` e usam fallback de customId com `_` do dispatcher central. Não registrar listeners em arquivos da funcionalidade.
+
+Uma submissão deve validar todos os campos antes da gravação atômica, reler o estado canônico e editar a mensagem de origem. Para registros pessoais sem cache, reler o MongoDB é suficiente; ao alterar configuração em `client.configs`, recarregar o cache da guild antes do renderer. Índice único e controle de versão protegem concorrência; o ID do documento distingue recriações após TTL. Campos pessoais têm retenção explícita, sem aplicar TTL a evidência comercial ou operações em andamento.
+
+Mantenha a separação existente entre painel com File e log com anexos: somente o primeiro pode ser V2. Logs com anexos permanecem diretamente em `{ embeds, files }`, fora de helpers/decoradores V2.
